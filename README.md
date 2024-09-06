@@ -2,6 +2,10 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+### AI Backend
+- add OpenAI API Key to `.env.local`
+- or use local AI backend
+
 First, run the development server:
 
 ```bash
