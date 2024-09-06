@@ -17,20 +17,36 @@ export default function Chat() {
   const [error, setError] = useState<string | null>(null);
 
   const generateStory = async () => {
-    setError(null); // Clear any previous errors
+    setError(null);
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ characters }),
+        body: JSON.stringify({
+          messages: [
+            {
+              role: "user",
+              content: `Generate a story with the following characters: ${characters.map(c => `${c.name} (${c.description}, ${c.personality})`).join(', ')}`
+            }
+          ]
+        }),
       });
 
       if (!response.ok) {
         throw new Error('Failed to generate story');
       }
 
-      const data = await response.json();
-      setChatMessages(prevMessages => [...prevMessages, data.message]);
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let story = '';
+
+      while (true) {
+        const { done, value } = await reader?.read() ?? { done: true, value: undefined };
+        if (done) break;
+        const chunk = decoder.decode(value);
+        story += chunk;
+        setChatMessages(prevMessages => [...prevMessages, story]);
+      }
     } catch (error) {
       console.error('Error generating story:', error);
       setError('Failed to connect to the backend. Please try again later.');
