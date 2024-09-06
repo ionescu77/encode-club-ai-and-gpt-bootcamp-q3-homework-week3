@@ -1,4 +1,4 @@
-## Weekend Project - Week 3
+## Weekend Project - Week 3 Homework
 
 To consolidate this week's knowledge, students should complete the following project:
 
@@ -17,6 +17,9 @@ To consolidate this week's knowledge, students should complete the following pro
    - Test models of varying sizes and observe how this influences the output
      - Use models compatible with your device, focusing on the experiment rather than overall story quality
 9. Submit your project via the submission form
+
+## Project Board
+https://github.com/users/ionescu77/projects/4
 
 ## Getting Started
 
@@ -48,17 +51,14 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+## Contributors
+This homework has been done by the following members of **GROUP 9**:
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* [Luis José Sánchez](https://github.com/LuisJoseSanchez)
+* [Oleksii Bondarenko](https://github.com/alexmazaltov)
+* [Razvan Ionescu](https://github.com/ionescu77)
+* [Amr Fayez](https://github.com/amrfayez)
+* [Akash Pathak](https://github.com/akkikumar72)
+* [Ahmed Yassin](https://github.com/AYassin01)
+* [Maria Kachalova](https://github.com/MaryFox)
+...
