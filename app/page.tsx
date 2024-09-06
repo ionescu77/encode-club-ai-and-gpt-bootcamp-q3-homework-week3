@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import CharacterTable from './components/CharacterTable';
 import ChatWindow from './components/ChatWindow';
 
@@ -14,6 +14,28 @@ interface Character {
 export default function Chat() {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [chatMessages, setChatMessages] = useState<string[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  const generateStory = async () => {
+    setError(null); // Clear any previous errors
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ characters }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate story');
+      }
+
+      const data = await response.json();
+      setChatMessages(prevMessages => [...prevMessages, data.message]);
+    } catch (error) {
+      console.error('Error generating story:', error);
+      setError('Failed to connect to the backend. Please try again later.');
+    }
+  };
 
   return (
     <main className="mx-auto w-full p-24 flex flex-col">
@@ -26,13 +48,11 @@ export default function Chat() {
             </p>
           </div>
 
-          {/* Table of characters CRUD code */}
           <CharacterTable
             characters={characters}
             setCharacters={setCharacters}
           />
           
-          {/* Generate Story button */}
           {characters.length === 0 ? (
             <p className="text-red-500">No characters found. Please add a character.</p>
           ) : (
@@ -44,30 +64,13 @@ export default function Chat() {
             </button>
           )}
 
-          {/* Chat messages */}
-          <ChatWindow messages={chatMessages} />
+          {error && (
+            <p className="text-red-500">{error}</p>
+          )}
 
-          {/* button code:
-            - if no characters in the table, display a message "No characters found. Please add a character."
-            - if characters are found, display a button "Generate Story"
-            - onClick, call the /chat API endpoint with the characters as the message history
-          */}
+          <ChatWindow messages={chatMessages} />
         </div>
       </div>
     </main>
   );
-}
-
-async function generateStory() {
-  try {
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ characters }),
-    });
-    const data = await response.json();
-    setChatMessages(prevMessages => [...prevMessages, data.message]);
-  } catch (error) {
-    console.error('Error generating story:', error);
-  }
 }

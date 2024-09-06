@@ -13,13 +13,13 @@ interface Props {
 }
 
 export default function CharacterTable({ characters, setCharacters }: Props) {
-  const [newCharacter, setNewCharacter] = useState<Omit<Character, 'id'>>({ name: '', description: '', personality: '' });
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [editForm, setEditForm] = useState<Omit<Character, 'id'>>({ name: '', description: '', personality: '' });
 
   const addCharacter = () => {
-    if (newCharacter.name && newCharacter.description && newCharacter.personality) {
-      setCharacters(prev => [...prev, { ...newCharacter, id: Date.now() }]);
-      setNewCharacter({ name: '', description: '', personality: '' });
+    if (editForm.name && editForm.description && editForm.personality) {
+      setCharacters(prev => [...prev, { ...editForm, id: Date.now() }]);
+      setEditForm({ name: '', description: '', personality: '' });
     }
   };
 
@@ -29,20 +29,15 @@ export default function CharacterTable({ characters, setCharacters }: Props) {
 
   const startEditing = (character: Character) => {
     setEditingId(character.id);
-    setNewCharacter({ name: character.name, description: character.description, personality: character.personality });
+    setEditForm({ name: character.name, description: character.description, personality: character.personality });
   };
 
   const saveEdit = () => {
     setCharacters(prev => prev.map(char => 
-      char.id === editingId ? { ...newCharacter, id: char.id } : char
+      char.id === editingId ? { ...editForm, id: char.id } : char
     ));
     setEditingId(null);
-    setNewCharacter({ name: '', description: '', personality: '' });
-  };
-
-  const cancelEdit = () => {
-    setEditingId(null);
-    setNewCharacter({ name: '', description: '', personality: '' });
+    setEditForm({ name: '', description: '', personality: '' });
   };
 
   return (
@@ -63,8 +58,8 @@ export default function CharacterTable({ characters, setCharacters }: Props) {
                 {editingId === character.id ? 
                   <input 
                     className="w-full text-black border rounded px-2 py-1" 
-                    value={newCharacter.name} 
-                    onChange={e => setNewCharacter({...newCharacter, name: e.target.value})} 
+                    value={editForm.name} 
+                    onChange={e => setEditForm({...editForm, name: e.target.value})} 
                   /> : 
                   character.name
                 }
@@ -73,8 +68,8 @@ export default function CharacterTable({ characters, setCharacters }: Props) {
                 {editingId === character.id ? 
                   <input 
                     className="w-full text-black border rounded px-2 py-1" 
-                    value={newCharacter.description} 
-                    onChange={e => setNewCharacter({...newCharacter, description: e.target.value})} 
+                    value={editForm.description} 
+                    onChange={e => setEditForm({...editForm, description: e.target.value})} 
                   /> : 
                   character.description
                 }
@@ -83,18 +78,15 @@ export default function CharacterTable({ characters, setCharacters }: Props) {
                 {editingId === character.id ? 
                   <input 
                     className="w-full text-black border rounded px-2 py-1" 
-                    value={newCharacter.personality} 
-                    onChange={e => setNewCharacter({...newCharacter, personality: e.target.value})} 
+                    value={editForm.personality} 
+                    onChange={e => setEditForm({...editForm, personality: e.target.value})} 
                   /> : 
                   character.personality
                 }
               </td>
               <td className="px-4 py-2 border-b">
                 {editingId === character.id ? (
-                  <>
-                    <button onClick={saveEdit} className="bg-green-500 text-white px-2 py-1 rounded mr-2">Save</button>
-                    <button onClick={cancelEdit} className="bg-gray-500 text-white px-2 py-1 rounded">Cancel</button>
-                  </>
+                  <button onClick={saveEdit} className="bg-green-500 text-white px-2 py-1 rounded mr-2">Save</button>
                 ) : (
                   <>
                     <button onClick={() => startEditing(character)} className="bg-blue-500 text-white px-2 py-1 rounded mr-2">Edit</button>
@@ -104,37 +96,31 @@ export default function CharacterTable({ characters, setCharacters }: Props) {
               </td>
             </tr>
           ))}
-          <tr>
-            <td className="px-4 py-2 border-b">
-              <input 
-                className="w-full text-black border rounded px-2 py-1" 
-                value={newCharacter.name} 
-                onChange={e => setNewCharacter({...newCharacter, name: e.target.value})} 
-                placeholder="Name" 
-              />
-            </td>
-            <td className="px-4 py-2 border-b">
-              <input 
-                className="w-full text-black border rounded px-2 py-1" 
-                value={newCharacter.description} 
-                onChange={e => setNewCharacter({...newCharacter, description: e.target.value})} 
-                placeholder="Description" 
-              />
-            </td>
-            <td className="px-4 py-2 border-b">
-              <input 
-                className="w-full text-black border rounded px-2 py-1" 
-                value={newCharacter.personality} 
-                onChange={e => setNewCharacter({...newCharacter, personality: e.target.value})} 
-                placeholder="Personality" 
-              />
-            </td>
-            <td className="px-4 py-2 border-b">
-              <button onClick={addCharacter} className="bg-green-500 text-white px-2 py-1 rounded">Add Character</button>
-            </td>
-          </tr>
         </tbody>
       </table>
+      {editingId === null && (
+        <div className="mt-4 flex space-x-2">
+          <input 
+            className="flex-1 text-black border rounded px-2 py-1" 
+            value={editForm.name} 
+            onChange={e => setEditForm({...editForm, name: e.target.value})} 
+            placeholder="Name" 
+          />
+          <input 
+            className="flex-1 text-black border rounded px-2 py-1" 
+            value={editForm.description} 
+            onChange={e => setEditForm({...editForm, description: e.target.value})} 
+            placeholder="Description" 
+          />
+          <input 
+            className="flex-1 text-black border rounded px-2 py-1" 
+            value={editForm.personality} 
+            onChange={e => setEditForm({...editForm, personality: e.target.value})} 
+            placeholder="Personality" 
+          />
+          <button onClick={addCharacter} className="bg-green-500 text-white px-4 py-2 rounded">Add Character</button>
+        </div>
+      )}
     </div>
   );
 }
