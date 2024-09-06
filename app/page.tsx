@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import { useChat } from "ai/react";
 import CharacterTable from './components/CharacterTable';
 import ChatWindow from './components/ChatWindow';
 
@@ -15,40 +16,9 @@ export default function Chat() {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [chatMessages, setChatMessages] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const { messages, append, isLoading } = useChat();
 
-  const generateStory = async () => {
-    setError(null); // Clear any previous errors
-    try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: [
-            {
-              role: "user",
-              content: `Generate a short story (max 500 characters) with: ${characters.map(c => `${c.name} (${c.description}, ${c.personality})`).join(', ')}`
-            }
-          ]
-        }),
-      });
 
-      let story = '';
-      while (true) {
-        const { done, value } = await reader?.read() ?? { done: true, value: undefined };
-        if (done) break;
-        const chunk = decoder.decode(value);
-        story += chunk;
-        if (story.length > 500) {
-          story = story.slice(0, 500);
-          break;
-        }
-      }
-      setChatMessages([story]);
-    } catch (error) {
-      console.error('Error generating story:', error);
-      setError('Failed to connect to the backend. Please try again later.');
-    }
-  };
 
   return (
     <main className="mx-auto w-full p-24 flex flex-col">
@@ -70,18 +40,31 @@ export default function Chat() {
             <p className="text-red-500">No characters found. Please add a character.</p>
           ) : (
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              onClick={generateStory}
-            >
-              Generate Story
-            </button>
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+            onClick={() =>
+              append({
+                role: "user",
+                content: `Generate a short story (max 500 characters) with: ${characters.map(c => `${c.name} (${c.description}, ${c.personality})`).join(', ')}`
+              })
+            }
+          >
+            Generate Story
+          </button>
           )}
 
           {error && (
             <p className="text-red-500">{error}</p>
           )}
 
-          <ChatWindow messages={chatMessages} />
+          <div
+              hidden={
+                  messages.length === 0 ||
+              messages[messages.length - 1]?.content.startsWith("Generate")
+          }
+          className="bg-opacity-50 bg-gray-700 rounded-lg p-4"
+          >
+          {messages[messages.length - 1]?.content}
+          </div>
         </div>
       </div>
     </main>
