@@ -47,9 +47,9 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Screenshot (draft version)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+<img width="75%" alt="Screenshot 2024-09-06 at 17 20 26" src="https://github.com/user-attachments/assets/c62aa6b3-668a-400d-ae24-5b44f1293055">
 
 ## Contributors
 This homework has been done by the following members of **GROUP 9**:
