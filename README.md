@@ -1,4 +1,4 @@
-## Weekend Project - Week 3
+## Weekend Project - Week 3 Homework
 
 To consolidate this week's knowledge, students should complete the following project:
 
@@ -17,6 +17,9 @@ To consolidate this week's knowledge, students should complete the following pro
    - Test models of varying sizes and observe how this influences the output
      - Use models compatible with your device, focusing on the experiment rather than overall story quality
 9. Submit your project via the submission form
+
+## Project Board
+https://github.com/users/ionescu77/projects/4
 
 ## Getting Started
 
