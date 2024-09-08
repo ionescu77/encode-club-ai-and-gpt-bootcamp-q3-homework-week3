@@ -51,6 +51,20 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 <img width="75%" alt="Screenshot 2024-09-06 at 17 20 26" src="https://github.com/user-attachments/assets/c62aa6b3-668a-400d-ae24-5b44f1293055">
 
+## Change OpenAI for local AI
+
+Run the **Text Generation UI**. The API will be available in <http://127.0.0.1:5000/>
+
+## Testing the app with different models
+
+Story generated with **llama-2-7b-chat.Q4_K_M.gguf**:
+
+<img width="75%" alt="" src="images/screenshot-llama.png">
+
+Story generated with **Phi-3.5-mini-instruct**:
+
+<img width="75%" alt="" src="images/screenshot-phi.png">
+
 ## Contributors
 This homework has been done by the following members of **GROUP 9**:
 
