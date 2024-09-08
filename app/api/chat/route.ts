@@ -1,7 +1,9 @@
 import OpenAI from "openai";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 
-const openai = new OpenAI();
+const openai = new OpenAI({
+  baseURL: "http://127.0.0.1:5000/v1",
+});
 
 export const runtime = "edge";
 
