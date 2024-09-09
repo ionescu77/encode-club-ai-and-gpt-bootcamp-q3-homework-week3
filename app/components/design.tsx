@@ -6,8 +6,9 @@
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "./ui/table"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useChat } from "ai/react";
+import Markdown from 'react-markdown'
 
 interface Character {
   id: number;
@@ -25,6 +26,9 @@ export default function Design({ characters, setCharacters }: Props) {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState<Omit<Character, 'id'>>({ name: '', description: '', personality: '' });
   const { messages, append, isLoading } = useChat();
+  const [generatedStory, setGeneratedStory] = useState<string | null>(null);
+  const { messages: evaluationMessages, append: appendEvaluation } = useChat({ id: 'evaluation' });
+  const [showEvaluation, setShowEvaluation] = useState(false);
 
   const addCharacter = () => {
     if (editForm.name && editForm.description && editForm.personality) {
@@ -49,7 +53,33 @@ export default function Design({ characters, setCharacters }: Props) {
     setEditingId(null);
     setEditForm({ name: '', description: '', personality: '' });
   };
+
+  const evaluateStory = async () => {
+    if (!generatedStory) return;
   
+    await appendEvaluation({
+      role: "user",
+      content: `Story: ${generatedStory}\n\nCharacters: ${JSON.stringify(characters)}`
+    });
+  };
+
+  const generateStory = async () => {
+    setShowEvaluation(false);
+    await append({
+      role: "user",
+      content: `Generate a short story (max 500 characters) with: ${characters.map(c => `${c.name} (${c.description}, ${c.personality})`).join(', ')}`
+    });
+  };
+
+  useEffect(() => {
+    if (isLoading) {
+      setGeneratedStory(null);
+    } else if (messages.length > 0) {
+      const response = messages[messages.length - 1].content;
+      setGeneratedStory(response);
+    }
+  }, [isLoading, messages]);
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-b from-[#ADD8E6] to-[#8B00FF]">
       <h1 className="mb-4 text-4xl font-bold text-center text-[#8B00FF]">🌙 Magical Story Generator 🌟</h1>
@@ -126,12 +156,10 @@ export default function Design({ characters, setCharacters }: Props) {
         {characters.length === 0 ? (
             <p className="text-red-500">No characters found. Please add a character.</p>
           ) : (
-        <Button onClick={() =>
-              append({
-                role: "user",
-                content: `Generate a short story (max 500 characters) with: ${characters.map(c => `${c.name} (${c.description}, ${c.personality})`).join(', ')}`
-              })
-            } className="w-full bg-[#8B00FF] hover:bg-[#6A0DAD] text-white">Generate Story ✨</Button>)
+              <Button onClick={generateStory} className="w-full bg-[#8B00FF] hover:bg-[#6A0DAD] text-white">
+                    Generate Story ✨
+              </Button>
+            )
           }
             <div
               hidden={
@@ -141,6 +169,23 @@ export default function Design({ characters, setCharacters }: Props) {
               className="bg-opacity-50 bg-gray-700 rounded-lg p-4"
             >
               {messages[messages.length - 1]?.content}
+              {generatedStory && (
+                <Button 
+                  onClick={() => {
+                    evaluateStory();
+                    setShowEvaluation(true);
+                  }} 
+                  className="mt-4 w-full bg-[#4CAF50] hover:bg-[#45a049] text-white"
+                >
+                  Evaluate Story 📝
+                </Button>
+              )}
+              {showEvaluation && evaluationMessages.length > 1 && (
+                <div className="mt-4 bg-opacity-50 bg-gray-700 rounded-lg p-4">
+                  <h3 className="text-xl font-bold mb-2">Story Evaluation:</h3>
+                  <Markdown>{evaluationMessages[evaluationMessages.length - 1].content}</Markdown>
+                </div>
+              )}
             </div>
       </div>
     </div>
